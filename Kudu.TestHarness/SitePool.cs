@@ -18,10 +18,13 @@ namespace Kudu.TestHarness
         private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(initialCount: 1);
         private static readonly string _sitePrefix = KuduUtils.SiteReusedForAllTests;
         private static readonly ConcurrentStack<int> _availableSiteIndex = new ConcurrentStack<int>(Enumerable.Range(1, MaxSiteNameIndex).Reverse());
-        private static ApplicationManager _nextAppManager;
+        // suwatch private static ApplicationManager _nextAppManager;
 
         public static async Task<ApplicationManager> CreateApplicationAsync()
         {
+            return await CreateApplicationInternal();
+
+            /* suwatch
             await _semaphore.WaitAsync();
             ApplicationManager appManager = _nextAppManager;
             _nextAppManager = null;
@@ -34,8 +37,10 @@ namespace Kudu.TestHarness
 
             EnsureNextApplication();
             return appManager;
+            */
         }
 
+        /* suwatch
         private static async void EnsureNextApplication()
         {
             await AppDomainHelper.RunTask(async () => 
@@ -51,6 +56,7 @@ namespace Kudu.TestHarness
                 }
             });
         }
+        * */
 
         public static void ReportTestCompletion(ApplicationManager applicationManager, bool success)
         {
